@@ -1,0 +1,16 @@
+.header-logo{
+  color: #ffffff;
+  font-size: 20px
+}
+.tabs{
+  margin-bottom:20px
+}
+.red{
+  color: red
+}
+.dispNone{
+  display: none;
+}
+.dispBlock{
+  display: block;
+}
