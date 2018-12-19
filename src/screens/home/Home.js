@@ -3,25 +3,13 @@ import './Home.css';
 import Header from '../../common/header/Header';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
-import GridListTileBar from '@material-ui/core/GridListTileBar';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {withStyles} from '@material-ui/core/styles';
 import withWidth, { isWidthUp } from '@material-ui/core/withWidth';
-
-const styles = {
-  card: {
-    width: 280,
-  },
-  media: {
-    // ⚠️ object-fit is not supported by IE 11.
-    objectFit: 'cover',
-  },
-};
 
 class Home extends React.Component {
 
@@ -52,7 +40,6 @@ class Home extends React.Component {
   }
 
   searchHandler = (value) => {
-    console.log('value', value);
     if (value !== '') {
       this.findRestaurantApiCall(value);
     }else {
@@ -61,8 +48,6 @@ class Home extends React.Component {
   }
 
   render(){
-    const{classes} = this.props;
-    console.log('width',this.props.width);
     return(
       <div style={{marginTop:100}}>
         <Header
@@ -73,7 +58,6 @@ class Home extends React.Component {
               <GridListTile key={item.id}>
                 <HomeItem
                   item={item}
-                  classes={classes}
                 />
               </GridListTile>
             ))}
@@ -93,12 +77,10 @@ class Home extends React.Component {
     return fetch(url,{
       method:'GET',
     }).then((response) =>{
-      console.log('response', response);
       if (response.ok) {
         return response.json();
       }
     }).then((responseJson)=>{
-      console.log('json',responseJson);
       that.setState({
         restaurantList:responseJson,
         filteredRestaurantList:responseJson
@@ -114,7 +96,6 @@ class Home extends React.Component {
     return fetch(url,{
       method:'GET',
     }).then((response) =>{
-      console.log('response', response);
       if (response.ok) {
         return response.json();
       }
@@ -132,7 +113,7 @@ class Home extends React.Component {
 }
 
 function HomeItem(props){
-  const{classes, item} = props;
+  const{item} = props;
   return(
     <div className="home-item-main-container">
       <Card style={{width:280}}>

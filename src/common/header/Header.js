@@ -2,15 +2,12 @@ import React, {Component} from 'react';
 import './Header.css';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import InputBase from '@material-ui/core/InputBase';
 import {withStyles} from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
-import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import MenuItem from '@material-ui/core/MenuItem';
 import Popover from '@material-ui/core/Popover';
-import { Link } from 'react-router-dom';
-import FastFood from '@material-ui/icons/Fastfood';
+import FastFoodIcon from '@material-ui/icons/Fastfood';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Button from '@material-ui/core/Button';
 import Modal from 'react-modal';
@@ -84,16 +81,6 @@ const styles = theme => ({
     marginLeft: 0,
     width:null
   },
-  searchIcon: {
-    width: theme.spacing.unit * 4,
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    color:'#ffffff'
-  },
   inputInput: {
     color:'#ffffff',
     width:220
@@ -109,12 +96,6 @@ const styles = theme => ({
   },
   appHeader:{
     backgroundColor:'#263238'
-  },
-  hr:{
-    height:'1.5px',
-    backgroundColor:'#f2f2f2',
-    marginLeft:'5px',
-    marginRight:'5px'
   },
   button: {
     height:30
@@ -219,7 +200,7 @@ class Header extends Component{
     return fetch(url,{
       method:'POST',
     }).then((response) =>{
-      console.log('response', response);
+      // console.log('response', response);
       if (response.ok) {
         sessionStorage.setItem("accessToken",response.headers.get("access-token"));
         return response.json();
@@ -228,7 +209,7 @@ class Header extends Component{
       }
       return response.text();
     }).then((msg)=>{
-      console.log('message',msg);
+      // console.log('message',msg);
       that.loginSuccess(msg)
       that.setState({
         loginFailMsg:msg
@@ -384,7 +365,7 @@ class Header extends Component{
     return fetch(url,{
       method:'POST',
     }).then((response) =>{
-      console.log('response', response);
+      // console.log('response', response);
       // return response.text();
       if (response.ok) {
         that.signUpSuccess();
@@ -417,7 +398,7 @@ class Header extends Component{
   }
 
   validateEmail = (email) => {
-    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    var re = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
     return re.test(email);
   }
 
@@ -448,17 +429,14 @@ class Header extends Component{
   }
 
   render(){
-    const {classes,screen} = this.props;
+    const {classes} = this.props;
     let isUserLoggedIn = sessionStorage.getItem("loggedIn");
     return (
         <div>
           <AppBar className={classes.appHeader}>
             <Toolbar className={classes.toolbar}>
-              <FastFood/>
+              <FastFoodIcon/>
               <div className={classes.search}>
-                {/* <div className={classes.searchIcon}>
-                  <SearchIcon />
-                </div> */}
                 <Input
                   id="input-with-icon-adornment"
                   classes={{input: classes.inputInput, underline:classes.customUnderline}}
@@ -470,7 +448,6 @@ class Header extends Component{
                     </InputAdornment>
                   }
                 />
-                {/* <InputBase disableUnderline={false} onChange={this.onSearchEntered} placeholder="Search by Restaurant Name" classes={{input: classes.inputInput}}/> */}
               </div>
               {!isUserLoggedIn &&
                 <Button variant="contained" className={classes.button} color="default" onClick={this.showModal}>
@@ -620,32 +597,30 @@ class Header extends Component{
     this.handleClose();
   }
 
-  doLogoutApiCall = () => {
-    let that = this;
-    let username = this.state.username;
-    let password = this.state.password;
-    let url = `http://localhost:8080/api/user/login?contactNumber=${username}&password=${password}`;
-    return fetch(url,{
-      method:'POST',
-    }).then((response) =>{
-      console.log('response', response);
-      if (response.ok) {
-        sessionStorage.setItem("accessToken",response.headers.get("access-token"));
-        return response.json();
-      }else {
-        that.loginFail();
-      }
-      return response.text();
-    }).then((msg)=>{
-      console.log('message',msg);
-      that.loginSuccess(msg)
-      that.setState({
-        loginFailMsg:msg
-      });
-    }).catch((error) => {
-      console.log('error login data',error);
-    });
-  }
+  // doLogoutApiCall = () => {
+  //   let that = this;
+  //   let username = this.state.username;
+  //   let password = this.state.password;
+  //   let url = `http://localhost:8080/api/user/login?contactNumber=${username}&password=${password}`;
+  //   return fetch(url,{
+  //     method:'POST',
+  //   }).then((response) =>{
+  //     if (response.ok) {
+  //       sessionStorage.setItem("accessToken",response.headers.get("access-token"));
+  //       return response.json();
+  //     }else {
+  //       that.loginFail();
+  //     }
+  //     return response.text();
+  //   }).then((msg)=>{
+  //     that.loginSuccess(msg)
+  //     that.setState({
+  //       loginFailMsg:msg
+  //     });
+  //   }).catch((error) => {
+  //     console.log('error login data',error);
+  //   });
+  // }
 
   handleClose = () =>{
     this.setState({ anchorEl: null });
