@@ -42,11 +42,11 @@ class Details extends React.Component {
       locality: null,
       categories: [],
     }
-  }
+  };
 
   componentDidMount() {
     this.getRestaurantDetails(6);
-  }
+  };
 
   getRestaurantDetails = (id) => {
     let that = this;
@@ -68,12 +68,10 @@ class Details extends React.Component {
         locality: responseJson.address.locality,
         categories: responseJson.categories,
       });
-      console.log('state', that.state);
-      console.log(that.state.categories.map((el) => (el.categoryName)))
     }).catch((error) => {
       console.log('error getting data', error);
     });
-  }
+  };
 
   render(){
     return(
@@ -117,17 +115,15 @@ class Details extends React.Component {
       </div>
 
       <div style={{display:'inline-block', width:'100%'}}>
+        
         {/* menu-items section */}
         <div style={{float:'left', width:'50%'}}>
           <div style={{padding:'3%'}}>
-            <Typography variant="caption" gutterBottom style={{fontWeight:"bold"}}> CHINESE </Typography>
-            <Divider />
-            <div style={{display:"flex", flexDirection:"row", width:"100%", padding:"2%"}}>
-              <div style={{width:"5%", display:"flex", alignItems:"center"}}><i class="fa fa-circle red" aria-hidden="true"></i></div> 
-              <div style={{width:"75%", display:"flex", alignItems:"center"}}>Hakka Noodles</div>
-              <div style={{width:"10%", display:"flex", alignItems:"center"}}><i class="fa fa-inr" aria-hidden="true"> 204 </i></div>
-              <div style={{width:"10%", display:"flex", alignItems:"center"}}><Add style={{height:"100%"}} /></div>
-            </div>
+            {this.state.categories.map(categoryItem =>
+              <div key={categoryItem.id}>
+                <CategoryItem item={categoryItem} />
+              </div>
+            )}
           </div>
         </div>
 
@@ -155,9 +151,34 @@ class Details extends React.Component {
         </div>
       </div>
 
-
       </div>
     );
+
+    function CategoryItem(props) {
+      return (
+        <div>
+          <Typography variant="caption" gutterBottom style={{fontWeight:"bold", textTransform:"uppercase"}}> {props.item.categoryName} </Typography>
+          <Divider />
+          {props.item.items.map(menuItem =>
+            <div key={menuItem.id}>
+              <MenuItem item={menuItem} />
+            </div>
+          )}
+        </div>
+      )
+    };
+
+    function MenuItem(props) {
+      const color = props.item.type === "Non-Veg" ? "red" : "green"
+      return (
+        <div style={{display:"flex", flexDirection:"row", width:"100%", padding:"2%"}}>
+          <div style={{width:"5%", display:"flex", alignItems:"center"}}><i style={{color:color}} class="fa fa-circle" aria-hidden="true"></i></div>
+          <div style={{width:"65%", display:"flex", alignItems:"center", textTransform:"capitalize"}}> {props.item.itemName} </div>
+          <div style={{width:"20%", display:"flex", alignItems:"center"}}><i class="fa fa-inr" aria-hidden="true"> {props.item.price.toFixed(2)} </i></div>
+          <div style={{width:"10%", display:"flex", alignItems:"center"}}><Add style={{height:"100%"}} /></div>
+        </div>
+      )
+    }
   }
 }
 
