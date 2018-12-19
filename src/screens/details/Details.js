@@ -12,9 +12,6 @@ import Add from '@material-ui/icons/Add';
 import Badge from '@material-ui/core/Badge';
 import Button from '@material-ui/core/Button';
 
-// import image
-import restImg from '../../assets/cafe-chairs-menu-6267.jpg';
-
 const styles = {
   card: {
     minWidth: 275,
@@ -32,8 +29,51 @@ const styles = {
   },
 };
 
+class Details extends React.Component {
 
-class Home extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      restaurantName: null,
+      photoUrl: null,
+      userRating: null,
+      avgPrice: null,
+      numberUsersRated: null,
+      locality: null,
+      categories: [],
+    }
+  }
+
+  componentDidMount() {
+    this.getRestaurantDetails(6);
+  }
+
+  getRestaurantDetails = (id) => {
+    let that = this;
+    let url = `http://localhost:8080/api/restaurant/${id}`;
+    return fetch(url, {
+      method:'GET',
+    }).then((response) => {
+      if (response.ok) {
+        return response.json();
+      }
+    }).then((responseJson) => {
+      console.log('json', responseJson);
+      that.setState({
+        restaurantName: responseJson.restaurantName,
+        photoUrl: responseJson.photoUrl,
+        userRating: responseJson.userRating,
+        avgPrice: responseJson.avgPrice,
+        numberUsersRated: responseJson.numberUsersRated,
+        locality: responseJson.address.locality,
+        categories: responseJson.categories,
+      });
+      console.log('state', that.state);
+      console.log(that.state.categories.map((el) => (el.categoryName)))
+    }).catch((error) => {
+      console.log('error getting data', error);
+    });
+  }
 
   render(){
     return(
@@ -49,7 +89,7 @@ class Home extends React.Component {
         <div style={{float:'left'}}>
           <div style={{padding: '30px'}}>
             <img 
-              src={restImg} 
+              src={this.state.photoUrl}
               alt='restaurant'
               width='500px'
             />
@@ -57,18 +97,18 @@ class Home extends React.Component {
         </div>
         <div style={{float:'left'}}>
           <div style={{padding: '50px'}}>
-            <Typography variant="h3" gutterBottom> Loud Silence </Typography> <br />
-            <Typography variant="h5" gutterBottom> CBD - Belapur </Typography> <br />
-            <Typography variant="body1" gutterBottom> Chinese, Continental, Indian, Italian, Snacks </Typography> <br />
+            <Typography variant="h3" gutterBottom> {this.state.restaurantName} </Typography> <br />
+            <Typography variant="h5" gutterBottom> {this.state.locality} </Typography> <br />
+            <Typography variant="body1" gutterBottom> {this.state.categories.map((el) => el.categoryName).join(", ")} </Typography>
             <div style={{float:'left'}}> 
               <div style={{padding:'70px'}}>
-              <i class="fa fa-star" aria-hidden="true">4.4</i>
-              <Typography variant="caption" gutterBottom> AVERAGE RATING BY <br /> <span style={{fontWeight: 'bold'}}>658</span> USERS </Typography>
+              <i class="fa fa-star" aria-hidden="true"> {this.state.userRating} </i>
+              <Typography variant="caption" gutterBottom> AVERAGE RATING BY <br /> <span style={{fontWeight: 'bold'}}> {this.state.numberUsersRated} </span> USERS </Typography>
               </div>
             </div>
             <div style={{float:'left'}}> 
               <div style={{padding:'70px'}}>
-              <i class="fa fa-inr" aria-hidden="true">600</i>
+              <i class="fa fa-inr" aria-hidden="true"> {this.state.avgPrice} </i>
               <Typography variant="caption" gutterBottom> AVERAGE COST FOR <br /> TWO PEOPLE </Typography>
               </div>
             </div>
@@ -121,4 +161,4 @@ class Home extends React.Component {
   }
 }
 
-export default Home;
+export default Details;

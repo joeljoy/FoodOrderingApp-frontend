@@ -11,7 +11,8 @@ library.add(faRupeeSign)
 
 const App = () => (
   <Switch>
-    <Route exact path='/' render={({history}, props) => <Home {...props} history={history}/>} />
+    <Route exact path='/' render={({history}, props) => <Home {...props} history={history} />} />
+    <Route exact path='/restaurant/' render={({history}, props) => <Details {...props} history={history} />} />
   </Switch>
 )
 
