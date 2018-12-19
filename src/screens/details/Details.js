@@ -76,29 +76,37 @@ class Home extends React.Component {
         </div>
       </div>
 
-      {/* menu-items section */}
-      <div>
-      Chinese
-      <Divider />
-      <div>
-        <i class="fa fa-circle red" aria-hidden="true"></i> Hakka Noodles
-        <i class="fa fa-inr" aria-hidden="true"> 204 </i>
-        <Add />
-      </div>
-      </div>
+      <div style={{display:'inline-block', width:'100%'}}>
+        {/* menu-items section */}
+        <div style={{float:'left', width:'50%'}}>
+          <div style={{padding:'3%'}}>
+            Chinese
+            <Divider />
+            <div>
+              <i class="fa fa-circle red" aria-hidden="true"></i> Hakka Noodles
+              <i class="fa fa-inr" aria-hidden="true"> 204 </i>
+              <Add />
+            </div>
+          </div>
+        </div>
 
-      {/* my-cart section */}
-      <Card className={styles.card}>
-      <CardContent>
-        <Badge badgeContent={0} color="primary"><ShoppingCart /></Badge>
-        <Typography variant="h5" gutterBottom style={{fontWeight:'bold'}}> My Cart </Typography> <br />
-      </CardContent>
-        <Typography variant="body1" gutterBottom style={{fontWeight:'bold'}}> TOTAL AMOUNT </Typography>
-        <i class="fa fa-inr" aria-hidden="true"> 975 </i>
-      <CardActions>
-        <Button variant="contained" color="primary"> CHECKOUT </Button>
-      </CardActions>
-      </Card>
+        {/* my-cart section */}
+        <div style={{float:'right', width:'50%'}}>
+          <div style={{padding:'3%'}}>
+            <Card className={styles.card}>
+              <CardContent>
+                <Badge badgeContent={0} color="primary"><ShoppingCart /></Badge>
+                <Typography variant="h5" gutterBottom style={{fontWeight:'bold'}}> My Cart </Typography>
+                <Typography variant="body1" gutterBottom style={{fontWeight:'bold'}}> TOTAL AMOUNT </Typography>
+                <i class="fa fa-inr" aria-hidden="true"> 975 </i>
+              </CardContent>
+              <CardActions>
+                <Button variant="contained" color="primary"> CHECKOUT </Button>
+              </CardActions>
+            </Card>
+          </div>
+        </div>
+      </div>
 
 
       </div>
