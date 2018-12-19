@@ -95,13 +95,19 @@ class Home extends React.Component {
           <div style={{padding:'3%'}}>
             <Card className={styles.card}>
               <CardContent>
-                <Badge badgeContent={0} color="primary"><ShoppingCart /></Badge>
-                <Typography variant="h5" gutterBottom style={{fontWeight:'bold'}}> My Cart </Typography>
-                <Typography variant="body1" gutterBottom style={{fontWeight:'bold'}}> TOTAL AMOUNT </Typography>
-                <i class="fa fa-inr" aria-hidden="true"> 975 </i>
+                <div style={{display:"inline-block", width:"100%"}}>
+                  <div style={{float:"left", width:"10%"}}><Badge badgeContent={0} color="primary"><ShoppingCart /></Badge></div>
+                  <div style={{float:"right", width:"90%"}}><Typography variant="h5" gutterBottom style={{fontWeight:'bold'}}> My Cart </Typography></div>
+                </div>
+                <div style={{display:"inline-block", width:"100%"}}>
+                  <div style={{float:"left"}}><Typography variant="body1" gutterBottom style={{fontWeight:'bold'}}> TOTAL AMOUNT </Typography></div>
+                  <div style={{float:"right"}}><i class="fa fa-inr" aria-hidden="true"> 975 </i></div>
+                </div>
               </CardContent>
               <CardActions>
-                <Button variant="contained" color="primary"> CHECKOUT </Button>
+                <div style={{width:"100%"}}>
+                  <Button style={{width:"100%"}} variant="contained" color="primary"> CHECKOUT </Button>
+                </div>
               </CardActions>
             </Card>
           </div>
