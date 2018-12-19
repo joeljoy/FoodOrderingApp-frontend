@@ -22,6 +22,7 @@ import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Snackbar from '@material-ui/core/Snackbar';
+import InputAdornment from '@material-ui/core/InputAdornment';
 
 const customStyles = {
   content: {
@@ -50,9 +51,31 @@ const styles = theme => ({
   },
   toolbar: {
     display:'flex',
-    flexDirection:'row',
-    justifyContent:'space-between',
-    alignItems:'center',
+    [theme.breakpoints.down('xs')]:{
+      flexDirection:'column',
+      justifyContent:'space-between',
+      alignItems:'flex-start',
+    },
+    [theme.breakpoints.down('sm')]:{
+      flexDirection:'column',
+      justifyContent:'space-between',
+      alignItems:'flex-start',
+    },
+    [theme.breakpoints.up('md')]:{
+      flexDirection:'row',
+      justifyContent:'space-between',
+      alignItems:'center',
+    },
+    [theme.breakpoints.up('lg')]:{
+      flexDirection:'row',
+      justifyContent:'space-between',
+      alignItems:'center',
+    },
+    [theme.breakpoints.up('xl')]:{
+      flexDirection:'row',
+      justifyContent:'space-between',
+      alignItems:'center',
+    },
   },
   search: {
     position: 'relative',
@@ -72,18 +95,17 @@ const styles = theme => ({
     color:'#ffffff'
   },
   inputInput: {
-    paddingTop: theme.spacing.unit,
-    paddingRight: theme.spacing.unit,
-    paddingBottom: theme.spacing.unit,
-    paddingLeft: theme.spacing.unit * 4,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    color:'#ffffff'
+    color:'#ffffff',
+    width:220
   },
-  avatar: {
-    height:20,
-    width:20,
+  icon: {
+    fontSize:20,
     marginRight:10
+  },
+  iconBig:{
+    fontSize:30,
+    marginRight:10,
+    color:'white'
   },
   appHeader:{
     backgroundColor:'#263238'
@@ -96,6 +118,14 @@ const styles = theme => ({
   },
   button: {
     height:30
+  },
+  customUnderline:{
+    '&:before':{
+      borderBottom:'1px solid black'
+    },
+    '&:after':{
+      borderBottom:'2px solid white'
+    }
   },
 })
 
@@ -130,7 +160,10 @@ class Header extends Component{
       snackMsg:"",
       loginFailMsgRequired:"dispNone",
       loginFailMsg:"",
-      userNameErrorMsg:""
+      userNameErrorMsg:"",
+      name:"",
+      typing:false,
+      typingTimeout:0
     };
   }
 
@@ -398,32 +431,58 @@ class Header extends Component{
     return re.test(number);
   }
 
+  //Using timeout to fire the api when user stops typing
+  onSearchEntered = (e) => {
+    let that = this;
+    if (this.state.typingTimeout) {
+      clearTimeout(this.state.typingTimeout);
+    }
+
+    this.setState({
+      name:e.target.value,
+      typing:false,
+      typingTimeout:setTimeout(function(){
+        that.props.searchHandler(that.state.name);
+      },500)
+    })
+  }
+
   render(){
     const {classes,screen} = this.props;
     let isUserLoggedIn = sessionStorage.getItem("loggedIn");
-    return (<div>
-        <AppBar className={classes.appHeader}>
-          <Toolbar className={classes.toolbar}>
-            <FastFood/>
+    return (
+        <div>
+          <AppBar className={classes.appHeader}>
+            <Toolbar className={classes.toolbar}>
+              <FastFood/>
               <div className={classes.search}>
-                <div className={classes.searchIcon}>
+                {/* <div className={classes.searchIcon}>
                   <SearchIcon />
-                </div>
-                <InputBase onChange={(e)=>{this.props.searchHandler(e.target.value)}} placeholder="Search by Restaurant Name..." classes={{input: classes.inputInput}}/>
+                </div> */}
+                <Input
+                  id="input-with-icon-adornment"
+                  classes={{input: classes.inputInput, underline:classes.customUnderline}}
+                  placeholder="Search by Restaurant Name"
+                  onChange={this.onSearchEntered}
+                  startAdornment={
+                    <InputAdornment position="start">
+                      <SearchIcon style={{color:"white"}}/>
+                    </InputAdornment>
+                  }
+                />
+                {/* <InputBase disableUnderline={false} onChange={this.onSearchEntered} placeholder="Search by Restaurant Name" classes={{input: classes.inputInput}}/> */}
               </div>
               {!isUserLoggedIn &&
                 <Button variant="contained" className={classes.button} color="default" onClick={this.showModal}>
-                  <Avatar className={classes.avatar}> <AccountCircle/></Avatar>
+                  <AccountCircle className={classes.icon}/>
                   Login
                 </Button>
               }
               {isUserLoggedIn &&
                 <div>
                   <IconButton onClick={this.handleClick}>
-                    <Avatar className={classes.avatar}>
-                      <AccountCircle/>
-                    </Avatar>
-                    <span style={{color:"white",fontSize:12}}>{sessionStorage.getItem("username")}</span>
+                    <AccountCircle className={classes.iconBig}/>
+                    <span style={{color:"white",fontSize:14}}>{sessionStorage.getItem("username")}</span>
                   </IconButton>
                   <Popover
                     id="simple-menu"
