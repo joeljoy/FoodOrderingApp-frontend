@@ -80,12 +80,13 @@ class Home extends React.Component {
         {/* menu-items section */}
         <div style={{float:'left', width:'50%'}}>
           <div style={{padding:'3%'}}>
-            Chinese
+            <Typography variant="caption" gutterBottom style={{fontWeight:"bold"}}> CHINESE </Typography>
             <Divider />
-            <div>
-              <i class="fa fa-circle red" aria-hidden="true"></i> Hakka Noodles
-              <i class="fa fa-inr" aria-hidden="true"> 204 </i>
-              <Add />
+            <div style={{display:"flex", flexDirection:"row", width:"100%", padding:"2%"}}>
+              <div style={{width:"5%", display:"flex", alignItems:"center"}}><i class="fa fa-circle red" aria-hidden="true"></i></div> 
+              <div style={{width:"75%", display:"flex", alignItems:"center"}}>Hakka Noodles</div>
+              <div style={{width:"10%", display:"flex", alignItems:"center"}}><i class="fa fa-inr" aria-hidden="true"> 204 </i></div>
+              <div style={{width:"10%", display:"flex", alignItems:"center"}}><Add style={{height:"100%"}} /></div>
             </div>
           </div>
         </div>
