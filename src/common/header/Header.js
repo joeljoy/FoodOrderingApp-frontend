@@ -2,15 +2,12 @@ import React, {Component} from 'react';
 import './Header.css';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import InputBase from '@material-ui/core/InputBase';
 import {withStyles} from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
-import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 import MenuItem from '@material-ui/core/MenuItem';
 import Popover from '@material-ui/core/Popover';
-import { Link } from 'react-router-dom';
-import FastFood from '@material-ui/icons/Fastfood';
+import FastFoodIcon from '@material-ui/icons/Fastfood';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Button from '@material-ui/core/Button';
 import Modal from 'react-modal';
@@ -22,6 +19,7 @@ import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Snackbar from '@material-ui/core/Snackbar';
+import InputAdornment from '@material-ui/core/InputAdornment';
 
 const customStyles = {
   content: {
@@ -50,9 +48,31 @@ const styles = theme => ({
   },
   toolbar: {
     display:'flex',
-    flexDirection:'row',
-    justifyContent:'space-between',
-    alignItems:'center',
+    [theme.breakpoints.down('xs')]:{
+      flexDirection:'column',
+      justifyContent:'space-between',
+      alignItems:'flex-start',
+    },
+    [theme.breakpoints.down('sm')]:{
+      flexDirection:'column',
+      justifyContent:'space-between',
+      alignItems:'flex-start',
+    },
+    [theme.breakpoints.up('md')]:{
+      flexDirection:'row',
+      justifyContent:'space-between',
+      alignItems:'center',
+    },
+    [theme.breakpoints.up('lg')]:{
+      flexDirection:'row',
+      justifyContent:'space-between',
+      alignItems:'center',
+    },
+    [theme.breakpoints.up('xl')]:{
+      flexDirection:'row',
+      justifyContent:'space-between',
+      alignItems:'center',
+    },
   },
   search: {
     position: 'relative',
@@ -61,41 +81,32 @@ const styles = theme => ({
     marginLeft: 0,
     width:null
   },
-  searchIcon: {
-    width: theme.spacing.unit * 4,
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    color:'#ffffff'
-  },
   inputInput: {
-    paddingTop: theme.spacing.unit,
-    paddingRight: theme.spacing.unit,
-    paddingBottom: theme.spacing.unit,
-    paddingLeft: theme.spacing.unit * 4,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    color:'#ffffff'
+    color:'#ffffff',
+    width:220
   },
-  avatar: {
-    height:20,
-    width:20,
+  icon: {
+    fontSize:20,
     marginRight:10
+  },
+  iconBig:{
+    fontSize:30,
+    marginRight:10,
+    color:'white'
   },
   appHeader:{
     backgroundColor:'#263238'
   },
-  hr:{
-    height:'1.5px',
-    backgroundColor:'#f2f2f2',
-    marginLeft:'5px',
-    marginRight:'5px'
-  },
   button: {
     height:30
+  },
+  customUnderline:{
+    '&:before':{
+      borderBottom:'1px solid black'
+    },
+    '&:after':{
+      borderBottom:'2px solid white'
+    }
   },
 })
 
@@ -130,7 +141,10 @@ class Header extends Component{
       snackMsg:"",
       loginFailMsgRequired:"dispNone",
       loginFailMsg:"",
-      userNameErrorMsg:""
+      userNameErrorMsg:"",
+      name:"",
+      typing:false,
+      typingTimeout:0
     };
   }
 
@@ -186,7 +200,7 @@ class Header extends Component{
     return fetch(url,{
       method:'POST',
     }).then((response) =>{
-      console.log('response', response);
+      // console.log('response', response);
       if (response.ok) {
         sessionStorage.setItem("accessToken",response.headers.get("access-token"));
         return response.json();
@@ -195,7 +209,7 @@ class Header extends Component{
       }
       return response.text();
     }).then((msg)=>{
-      console.log('message',msg);
+      // console.log('message',msg);
       that.loginSuccess(msg)
       that.setState({
         loginFailMsg:msg
@@ -351,7 +365,7 @@ class Header extends Component{
     return fetch(url,{
       method:'POST',
     }).then((response) =>{
-      console.log('response', response);
+      // console.log('response', response);
       // return response.text();
       if (response.ok) {
         that.signUpSuccess();
@@ -384,7 +398,7 @@ class Header extends Component{
   }
 
   validateEmail = (email) => {
-    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    var re = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
     return re.test(email);
   }
 
@@ -398,32 +412,54 @@ class Header extends Component{
     return re.test(number);
   }
 
+  //Using timeout to fire the api when user stops typing
+  onSearchEntered = (e) => {
+    let that = this;
+    if (this.state.typingTimeout) {
+      clearTimeout(this.state.typingTimeout);
+    }
+
+    this.setState({
+      name:e.target.value,
+      typing:false,
+      typingTimeout:setTimeout(function(){
+        that.props.searchHandler(that.state.name);
+      },500)
+    })
+  }
+
   render(){
-    const {classes,screen} = this.props;
+    const {classes} = this.props;
     let isUserLoggedIn = sessionStorage.getItem("loggedIn");
-    return (<div>
-        <AppBar className={classes.appHeader}>
-          <Toolbar className={classes.toolbar}>
-            <FastFood/>
+    return (
+        <div>
+          <AppBar className={classes.appHeader}>
+            <Toolbar className={classes.toolbar}>
+              <FastFoodIcon/>
               <div className={classes.search}>
-                <div className={classes.searchIcon}>
-                  <SearchIcon />
-                </div>
-                <InputBase onChange={(e)=>{this.props.searchHandler(e.target.value)}} placeholder="Search by Restaurant Name..." classes={{input: classes.inputInput}}/>
+                <Input
+                  id="input-with-icon-adornment"
+                  classes={{input: classes.inputInput, underline:classes.customUnderline}}
+                  placeholder="Search by Restaurant Name"
+                  onChange={this.onSearchEntered}
+                  startAdornment={
+                    <InputAdornment position="start">
+                      <SearchIcon style={{color:"white"}}/>
+                    </InputAdornment>
+                  }
+                />
               </div>
               {!isUserLoggedIn &&
                 <Button variant="contained" className={classes.button} color="default" onClick={this.showModal}>
-                  <Avatar className={classes.avatar}> <AccountCircle/></Avatar>
+                  <AccountCircle className={classes.icon}/>
                   Login
                 </Button>
               }
               {isUserLoggedIn &&
                 <div>
                   <IconButton onClick={this.handleClick}>
-                    <Avatar className={classes.avatar}>
-                      <AccountCircle/>
-                    </Avatar>
-                    <span style={{color:"white",fontSize:12}}>{sessionStorage.getItem("username")}</span>
+                    <AccountCircle className={classes.iconBig}/>
+                    <span style={{color:"white",fontSize:14}}>{sessionStorage.getItem("username")}</span>
                   </IconButton>
                   <Popover
                     id="simple-menu"
@@ -561,32 +597,30 @@ class Header extends Component{
     this.handleClose();
   }
 
-  doLogoutApiCall = () => {
-    let that = this;
-    let username = this.state.username;
-    let password = this.state.password;
-    let url = `http://localhost:8080/api/user/login?contactNumber=${username}&password=${password}`;
-    return fetch(url,{
-      method:'POST',
-    }).then((response) =>{
-      console.log('response', response);
-      if (response.ok) {
-        sessionStorage.setItem("accessToken",response.headers.get("access-token"));
-        return response.json();
-      }else {
-        that.loginFail();
-      }
-      return response.text();
-    }).then((msg)=>{
-      console.log('message',msg);
-      that.loginSuccess(msg)
-      that.setState({
-        loginFailMsg:msg
-      });
-    }).catch((error) => {
-      console.log('error login data',error);
-    });
-  }
+  // doLogoutApiCall = () => {
+  //   let that = this;
+  //   let username = this.state.username;
+  //   let password = this.state.password;
+  //   let url = `http://localhost:8080/api/user/login?contactNumber=${username}&password=${password}`;
+  //   return fetch(url,{
+  //     method:'POST',
+  //   }).then((response) =>{
+  //     if (response.ok) {
+  //       sessionStorage.setItem("accessToken",response.headers.get("access-token"));
+  //       return response.json();
+  //     }else {
+  //       that.loginFail();
+  //     }
+  //     return response.text();
+  //   }).then((msg)=>{
+  //     that.loginSuccess(msg)
+  //     that.setState({
+  //       loginFailMsg:msg
+  //     });
+  //   }).catch((error) => {
+  //     console.log('error login data',error);
+  //   });
+  // }
 
   handleClose = () =>{
     this.setState({ anchorEl: null });
