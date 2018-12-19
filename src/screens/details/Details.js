@@ -3,9 +3,35 @@ import './Details.css';
 import Header from '../../common/header/Header';
 
 import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import ShoppingCart from '@material-ui/icons/ShoppingCart';
+import Add from '@material-ui/icons/Add';
+import Badge from '@material-ui/core/Badge';
+import Button from '@material-ui/core/Button';
 
 // import image
 import restImg from '../../assets/cafe-chairs-menu-6267.jpg';
+
+const styles = {
+  card: {
+    minWidth: 275,
+  },
+  bullet: {
+    display: 'inline-block',
+    margin: '0 2px',
+    transform: 'scale(0.8)',
+  },
+  title: {
+    fontSize: 14,
+  },
+  pos: {
+    marginBottom: 12,
+  },
+};
+
 
 class Home extends React.Component {
 
@@ -49,6 +75,31 @@ class Home extends React.Component {
           </div>
         </div>
       </div>
+
+      {/* menu-items section */}
+      <div>
+      Chinese
+      <Divider />
+      <div>
+        <i class="fa fa-circle red" aria-hidden="true"></i> Hakka Noodles
+        <i class="fa fa-inr" aria-hidden="true"> 204 </i>
+        <Add />
+      </div>
+      </div>
+
+      {/* my-cart section */}
+      <Card className={styles.card}>
+      <CardContent>
+        <Badge badgeContent={0} color="primary"><ShoppingCart /></Badge>
+        <Typography variant="h5" gutterBottom style={{fontWeight:'bold'}}> My Cart </Typography> <br />
+      </CardContent>
+        <Typography variant="body1" gutterBottom style={{fontWeight:'bold'}}> TOTAL AMOUNT </Typography>
+        <i class="fa fa-inr" aria-hidden="true"> 975 </i>
+      <CardActions>
+        <Button variant="contained" color="primary"> CHECKOUT </Button>
+      </CardActions>
+      </Card>
+
 
       </div>
     );
