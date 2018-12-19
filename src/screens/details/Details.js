@@ -154,6 +154,18 @@ class Details extends React.Component {
                   <div style={{float:"left", width:"10%"}}><Badge badgeContent={this.state.cartItems} color="primary"><ShoppingCart /></Badge></div>
                   <div style={{float:"right", width:"90%"}}><Typography variant="h5" gutterBottom style={{fontWeight:'bold'}}> My Cart </Typography></div>
                 </div>
+
+                {/* items in cart */}
+                <div style={{display:"flex", flexDirection:"row", width:"100%", padding:"3%"}}>
+                  <div style={{width:"10%", display:"flex", alignItems:"center"}}><i class="fa fa-stop-circle-o" aria-hidden="true"></i></div>
+                  <div style={{width:"40%", display:"flex", alignItems:"center"}}><span style={{color:"grey"}}>Coke</span></div>
+                  <div style={{width:"5%", display:"flex", alignItems:"center"}}><i class="fa fa-minus" aria-hidden="true" on></i></div>
+                  <div style={{width:"5%", display:"flex", alignItems:"center"}}>1</div>
+                  <div style={{width:"30%", display:"flex", alignItems:"center"}}><i class="fa fa-plus" aria-hidden="true" on></i></div>
+                  <div style={{display:"flex", alignItems:"center"}}><i class="fa fa-inr" aria-hidden="true"><span style={{color:"grey"}}>30.00</span></i></div>
+                </div>
+
+
                 <div style={{display:"inline-block", width:"100%"}}>
                   <div style={{float:"left"}}><Typography variant="body1" gutterBottom style={{fontWeight:'bold'}}> TOTAL AMOUNT </Typography></div>
                   <div style={{float:"right"}}><i class="fa fa-inr" aria-hidden="true"> 975 </i></div>
