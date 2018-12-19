@@ -156,7 +156,7 @@ class Details extends React.Component {
 
     function CategoryItem(props) {
       return (
-        <div>
+        <div style={{padding:"1%"}}>
           <Typography variant="caption" gutterBottom style={{fontWeight:"bold", textTransform:"uppercase"}}> {props.item.categoryName} </Typography>
           <Divider />
           {props.item.items.map(menuItem =>
