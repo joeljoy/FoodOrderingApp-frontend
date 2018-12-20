@@ -91,7 +91,7 @@ class Details extends React.Component {
   checkoutHandler = () => {
     if (this.state.cartItems === 0) {
       this.handleSnackBar("Please add an item to your cart!");
-    } else if (sessionStorage.getItem('access-token') == null) {
+    } else if (!sessionStorage.getItem("loggedIn")) {
       this.handleSnackBar("Please login first!");
     }
   }
