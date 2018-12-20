@@ -88,6 +88,14 @@ class Details extends React.Component {
     });
   }
 
+  checkoutHandler = () => {
+    if (this.state.cartItems === 0) {
+      this.handleSnackBar("Please add an item to your cart!");
+    } else if (sessionStorage.getItem('access-token') == null) {
+      this.handleSnackBar("Please login first!");
+    }
+  }
+
   removeItemFromCartHandler = (cartItem) => {
     this.handleSnackBar("Item quantity decreased by 1!");
     let cartItemsList = this.state.cartItemsList;
@@ -218,7 +226,7 @@ class Details extends React.Component {
               </CardContent>
               <CardActions>
                 <div style={{width:"100%"}}>
-                  <Button style={{width:"100%"}} variant="contained" color="primary"> CHECKOUT </Button>
+                  <Button style={{width:"100%"}} variant="contained" color="primary" onClick={this.checkoutHandler}> CHECKOUT </Button>
                 </div>
               </CardActions>
             </Card>
