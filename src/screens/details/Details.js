@@ -44,9 +44,11 @@ class Details extends React.Component {
       numberUsersRated: null,
       locality: null,
       categories: [],
-      itemAddedBarOpen: false,
+      snackbarOpen: false,
       cartItems: 0,
       cartItemsList: [],
+      snackbarMessage: null,
+      cartTotalPrice: 0,
     }
   };
 
@@ -79,32 +81,62 @@ class Details extends React.Component {
     });
   };
 
-  handleItemAddedBar = () => {
+  handleSnackBar = (message) => {
     this.setState({
-      itemAddedBarOpen: !this.state.itemAddedBarOpen
+      snackbarOpen: !this.state.snackbarOpen,
+      snackbarMessage: message,
+    });
+  }
+
+  removeItemFromCartHandler = (cartItem) => {
+    this.handleSnackBar("Item quantity decreased by 1!");
+    let cartItemsList = this.state.cartItemsList;
+    let index = cartItemsList.indexOf(cartItem);
+    cartItemsList[index].quantity -= 1;
+    if (cartItemsList[index].quantity === 0) {
+      cartItemsList.splice(index, 1);
+    }
+    this.setState({
+      cartItems: this.state.cartItems - 1,
+      cartItemsList: cartItemsList,
+      cartTotalPrice: this.state.cartTotalPrice - cartItem.item.price,
     })
   }
 
-  addItemHandler = (item) => {
-    this.handleItemAddedBar();
+  addItemFromCartHandler = (cartItem) => {
+    this.handleSnackBar("Item quantity increased by 1!");
     let cartItemsList = this.state.cartItemsList;
-    
+    let index = cartItemsList.indexOf(cartItem);
+    cartItemsList[index].quantity += 1;
+    this.setState({
+      cartItems: this.state.cartItems + 1,
+      cartItemsList: cartItemsList,
+      cartTotalPrice: this.state.cartTotalPrice + cartItem.item.price,
+    });
+  }
+
+  addItemHandler = (item) => {
+    this.handleSnackBar("Item added to cart!");
+    let cartItemsList = this.state.cartItemsList;
+    var cartItem;
     let cartItems = cartItemsList.map((el) => el.item);
     let index = cartItems.indexOf(item);
     if (index === -1) {
-      let cartItem = {
+      cartItem = {
         item: item,
         quantity: 1,
       }
       cartItemsList.push(cartItem);
     } else {
       cartItemsList[index].quantity += 1;
+      cartItem = cartItemsList[index]
     }
 
     this.setState({
       cartItems: this.state.cartItems + 1,
       cartItemsList: cartItemsList,
-    })
+      cartTotalPrice: this.state.cartTotalPrice + cartItem.item.price,
+    });
     console.log(cartItemsList);
   }
 
@@ -181,7 +213,7 @@ class Details extends React.Component {
 
                 <div style={{display:"inline-block", width:"100%", paddingTop:"3%"}}>
                   <div style={{float:"left"}}><Typography variant="body1" gutterBottom style={{fontWeight:'bold'}}> TOTAL AMOUNT </Typography></div>
-                  <div style={{float:"right", width: "14%"}}><i class="fa fa-inr" aria-hidden="true"> 975.00 </i></div>
+                  <div style={{float:"right", width: "14%"}}><i class="fa fa-inr" aria-hidden="true"> {this.state.cartTotalPrice.toFixed(2)} </i></div>
                 </div>
               </CardContent>
               <CardActions>
@@ -199,19 +231,19 @@ class Details extends React.Component {
           vertical: 'bottom',
           horizontal: 'left',
         }}
-        open={this.state.itemAddedBarOpen}
-        autoHideDuration={6000}
-        onClose={this.handleItemAddedBar}
+        open={this.state.snackbarOpen}
+        autoHideDuration={1000}
+        onClose={(e) => this.handleSnackBar("")}
         ContentProps={{
           'aria-describedby': 'message-id',
         }}
-        message={<span id="message-id">Item added to cart!</span>}
+        message={<span id="message-id">{this.state.snackbarMessage}</span>}
         action={[
           <IconButton
             key="close"
             aria-label="Close"
             color="inherit"
-            onClick={this.handleItemAddedBar}
+            onClick={(e) => this.handleSnackBar("")}
           >
           <CloseIcon />
           </IconButton>,
@@ -230,9 +262,13 @@ function CartItem(props) {
     <div style={{display:"flex", flexDirection:"row", width:"100%", padding:"1%"}}>
       <div style={{width:"10%", display:"flex", alignItems:"center"}}><i style={{color:color}} class="fa fa-stop-circle-o" aria-hidden="true"></i></div>
       <div style={{width:"40%", display:"flex", alignItems:"center", textTransform:"capitalize"}}><span style={{color:"grey"}}> {cartItem.item.itemName} </span></div>
-      <div style={{width:"5%", display:"flex", alignItems:"center"}}><i class="fa fa-minus" aria-hidden="true" on></i></div>
+      <div style={{width:"5%", display:"flex", alignItems:"center"}}>
+        <i onClick={(e) => props.this.removeItemFromCartHandler(cartItem)} class="cartButton fa fa-minus" aria-hidden="true" on></i>
+      </div>
       <div style={{width:"5%", display:"flex", alignItems:"center"}}> {cartItem.quantity} </div>
-      <div style={{width:"25%", display:"flex", alignItems:"center"}}><i class="fa fa-plus" aria-hidden="true" on></i></div>
+      <div style={{width:"25%", display:"flex", alignItems:"center"}}>
+        <i onClick={(e) => props.this.addItemFromCartHandler(cartItem)} class="cartButton fa fa-plus" aria-hidden="true" on></i>
+      </div>
       <div style={{display:"flex", alignItems:"center"}}><i class="fa fa-inr" aria-hidden="true"><span style={{color:"grey"}}> {cartItem.item.price.toFixed(2)} </span></i></div>
     </div>
   )
