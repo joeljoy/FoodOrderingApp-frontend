@@ -97,12 +97,14 @@ class Details extends React.Component {
   }
 
   removeItemFromCartHandler = (cartItem) => {
-    this.handleSnackBar("Item quantity decreased by 1!");
     let cartItemsList = this.state.cartItemsList;
     let index = cartItemsList.indexOf(cartItem);
     cartItemsList[index].quantity -= 1;
     if (cartItemsList[index].quantity === 0) {
       cartItemsList.splice(index, 1);
+      this.handleSnackBar("Item removed from cart!");
+    } else {
+      this.handleSnackBar("Item quantity decreased by 1!");
     }
     this.setState({
       cartItems: this.state.cartItems - 1,
