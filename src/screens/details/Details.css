@@ -1,0 +1,60 @@
+.cartButton:hover {
+    background: yellow;
+    cursor: pointer;
+}
+
+.restaurant-information {
+    background:rgb(211,211,211); 
+    display: flex; 
+    flex-direction: row;
+    width: 100%;
+}
+
+.restaurant-details {
+    padding: 2%;
+    width: 70%;
+}
+
+.restaurant-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2%;
+    width: 30%;
+}
+
+.menu-cart-section {
+    display: flex; 
+    flex-direction: row;
+    width:'100%';
+}
+
+.menu {
+    width: 50%;
+}
+
+.cart {
+    width: 50%;
+}
+
+@media only screen and (max-width: 768px){
+    .restaurant-information {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+    .restaurant-image {
+        width: 100%;
+    }
+    .restaurant-details {
+        width: 100%;
+    }
+    .menu-cart-section {
+        flex-wrap: wrap;
+    }
+    .menu {
+        width: 100%;
+    }
+    .cart {
+        width: 100%;
+    }
+}

@@ -144,7 +144,8 @@ class Header extends Component{
       userNameErrorMsg:"",
       name:"",
       typing:false,
-      typingTimeout:0
+      typingTimeout:0,
+      showSearch: props.showSearch,
     };
   }
 
