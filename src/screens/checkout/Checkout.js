@@ -24,6 +24,11 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Divider from '@material-ui/core/Divider';
 
 const TabContainer = function(props) {
   return (<Typography component="div" style={{
@@ -64,8 +69,8 @@ const styles = theme => ({
 })
 
 class Checkout extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       value:0,
       addressList:[],
@@ -82,8 +87,11 @@ class Checkout extends React.Component {
       state:'',
       stateRequired:"dispNone",
       paymentMode:'',
-      paymentModeList:[]
+      paymentModeList:[],
+      cartTotalPrice:props.total
     }
+    console.log('cart items',sessionStorage.getItem("cartTotalPrice"));
+    this.cartItemsList = props.items;
   }
 
   getSteps = () => {
@@ -197,7 +205,7 @@ class Checkout extends React.Component {
             value={this.state.paymentMode}
             onChange={this.handlePaymentChange}>
             {this.state.paymentModeList.map(mode => (
-              <FormControlLabel value={mode.paymentName} control={<Radio />} label={mode.paymentName} />
+              <FormControlLabel value={mode.id.toString()} control={<Radio />} label={mode.paymentName} />
             ))}
             {/* <FormControlLabel value="cash_on_delivery" control={<Radio />} label="Cash on Delivery" />
             <FormControlLabel value="wallet" control={<Radio />} label="Wallet" />
@@ -210,6 +218,7 @@ class Checkout extends React.Component {
   }
 
   handlePaymentChange = (e) => {
+    console.log(e.target.value);
     this.setState({
       paymentMode:e.target.value
     })
@@ -257,16 +266,19 @@ class Checkout extends React.Component {
   }
 
   handleNext = () => {
-      this.setState(state => ({
-        activeStep: state.activeStep + 1,
-      }));
-    };
+    if (this.state.activeStep === 0) {
 
-    handleBack = () => {
-      this.setState(state => ({
-        activeStep: state.activeStep - 1,
-      }));
-    };
+    }
+    this.setState(state => ({
+      activeStep: state.activeStep + 1,
+    }));
+  };
+
+  handleBack = () => {
+    this.setState(state => ({
+      activeStep: state.activeStep - 1,
+    }));
+  };
 
   render(){
     const {classes} = this.props;
@@ -275,36 +287,63 @@ class Checkout extends React.Component {
       <div style={{marginTop:100}}>
         <Header
           screen="Checkout"/>
-        <Stepper activeStep = {this.state.activeStep} orientation="vertical">
-          {this.getSteps().map((label,index)=>{
-            return(
-              <Step key={label}>
-                <StepLabel>{label}</StepLabel>
-                <StepContent>
-                  {this.state.activeStep === 0 && this.getDeliveryStep()}
-                  {this.state.activeStep === 1 && this.getPaymentStep()}
-                  <div className={classes.actionsContainer}>
-                    <div>
-                      <Button
-                        disabled={this.state.activeStep === 0}
-                        onClick={this.handleBack}
-                        className={classes.button}>
-                        Back
-                      </Button>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={this.handleNext}
-                        className={classes.button}>
-                        {this.state.activeStep === that.getSteps().length - 1 ? 'Finish' : 'Next'}
-                      </Button>
+        <div style={{padding:10,display:'flex',flexDirection:'row', justifyContent:'space-between',alignItems:'center'}}>
+          <Stepper style={{width:'70%'}}activeStep = {this.state.activeStep} orientation="vertical">
+            {this.getSteps().map((label,index)=>{
+              return(
+                <Step key={label}>
+                  <StepLabel>{label}</StepLabel>
+                  <StepContent>
+                    {this.state.activeStep === 0 && this.getDeliveryStep()}
+                    {this.state.activeStep === 1 && this.getPaymentStep()}
+                    <div className={classes.actionsContainer}>
+                      <div>
+                        <Button
+                          disabled={this.state.activeStep === 0}
+                          onClick={this.handleBack}
+                          className={classes.button}>
+                          Back
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={this.handleNext}
+                          className={classes.button}>
+                          {this.state.activeStep === that.getSteps().length - 1 ? 'Finish' : 'Next'}
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                </StepContent>
-              </Step>
-            )
-          })}
-        </Stepper>
+                  </StepContent>
+                </Step>
+              )
+            })}
+          </Stepper>
+          <Card style={{width: '30%',padding:10,display:'flex',flexDirection:'column'}}>
+            <CardContent>
+              <Typography variant="h5" gutterBottom style={{fontWeight:'bold'}}> Summary </Typography>
+              {/* items in cart */}
+              {this.cartItemsList.length > 0 && this.cartItemsList.map(cartItem =>
+                <div key={cartItem.id}>
+                  <CartItem item={cartItem} this={this} />
+                </div>
+              )}
+              <Divider style={{marginTop:10}}/>
+              <div style={{display:"inline-block", width:"100%", paddingTop:"3%"}}>
+                <div style={{float:"left"}}><Typography variant="body1" gutterBottom style={{fontWeight:'bold'}}> TOTAL AMOUNT </Typography></div>
+                <div style={{float:"right", width: "14%",display:'flex',alignItems:'center'}}>
+                  <FontAwesomeIcon size="sm" icon="rupee-sign" color="black"/>
+                  <span style={{color:"black"}}> {this.state.cartTotalPrice.toFixed(2)} </span>
+                </div>
+              </div>
+            </CardContent>
+            <CardActions>
+              <div style={{width:"100%"}}>
+                <Button style={{width:"100%"}} variant="contained" color="primary" onClick={this.placeOrderHandler}> PLACE ORDER </Button>
+              </div>
+            </CardActions>
+          </Card>
+        </div>
+
       </div>
     )
   }
@@ -377,6 +416,60 @@ class Checkout extends React.Component {
       console.log('error login data',error);
     });
   }
+
+  placeOrderHandler = () => {
+    let that = this;
+    let amout = parseFloat(this.state.cartTotalPrice).toFixed(2);
+    let url = `http://localhost:8080/api/order?&bill=${amout}&addressId=${this.state.currentAddress.id}&
+      flatBuilNo=${this.state.currentAddress.flatBuilNo}&
+      locality=${this.state.currentAddress.locality}&
+      city=${this.state.currentAddress.city}&
+      zipcode=${this.state.currentAddress.zipcode}&
+      stateId=${this.state.currentAddress.states.id}&
+      type=perm&paymentId=${this.state.paymentMode}`
+
+    let body = this.cartItemsList.map(item => {
+      var obj = {};
+      obj['itemId'] = item.item.id;
+      obj['quantity'] = item.quantity;
+      return obj
+    })
+    return fetch(url,{
+      method:'POST',
+      headers:{
+        'accessToken':sessionStorage.getItem('accessToken'),
+        'content-type': 'application/json'
+      },
+      body:JSON.stringify(body)
+    }).then((response) =>{
+      if (response.ok) {
+        return that.orderPlaced();
+      }
+    }).catch((error) => {
+      console.log('error login data',error);
+    });
+  }
+
+  orderPlaced = () => {
+    console.log('order placed');
+  }
+}
+
+function CartItem(props) {
+  console.log(props);
+  const cartItem = props.item;
+  const tag = cartItem.item.type === "Non-Veg" ? <FontAwesomeIcon icon="stop-circle" color="red"/> : <FontAwesomeIcon icon="stop-circle" color="green"/>;
+  return (
+    <div style={{display:"flex", justifyContent:"space-between",alignItems:"center",flexDirection:"row", width:"100%", padding:"1%"}}>
+      {tag}
+      <div style={{display:"flex", alignSelf:"flex-start", textTransform:"capitalize"}}><span style={{color:"grey"}}> {cartItem.item.itemName} </span></div>
+      <div style={{display:"flex", alignItems:"center", textTransform:"capitalize"}}>
+        <FontAwesomeIcon size="xs" icon="rupee-sign" color="grey"/>
+        <span style={{color:"grey"}}> {cartItem.quantity} </span>
+      </div>
+      <div style={{display:"flex", alignSelf:"flex-end"}}><i class="fa fa-inr" aria-hidden="true"><span style={{color:"grey"}}> {cartItem.item.price.toFixed(2)} </span></i></div>
+    </div>
+  )
 }
 
 export default withStyles(styles)(Checkout);

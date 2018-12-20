@@ -53,7 +53,9 @@ class Details extends React.Component {
   };
 
   componentWillMount() {
-    this.getRestaurantDetails(6);
+    // let id = sessionStorage.getItem('currentRest');
+    let id = this.props.restaurantId;
+    this.getRestaurantDetails(id);
   };
 
   getRestaurantDetails = (id) => {
@@ -93,6 +95,12 @@ class Details extends React.Component {
       this.handleSnackBar("Please add an item to your cart!");
     } else if (!sessionStorage.getItem("loggedIn")) {
       this.handleSnackBar("Please login first!");
+    }else {
+      // sessionStorage.setItem("cartItems",this.state.cartItemsList)
+      // sessionStorage.setItem("cartTotalPrice",this.state.cartTotalPrice);
+      this.props.addItems(this.state.cartItemsList)
+      this.props.setCartTotal(this.state.cartTotalPrice)
+      this.props.history.push('/checkout');
     }
   }
 
@@ -147,30 +155,30 @@ class Details extends React.Component {
       cartItemsList: cartItemsList,
       cartTotalPrice: this.state.cartTotalPrice + cartItem.item.price,
     });
-    console.log(cartItemsList);
+    console.log(JSON.stringify(cartItemsList));
   }
 
   render(){
     return(
       <div>
-      
+
       {/* Header */}
       <div style={{marginTop: '64px'}}>
         <Header showSearch={false} />
       </div>
 
       {/* restaurant information section */}
-      <div class="restaurant-information">
-        <div class="restaurant-image">
+      <div className="restaurant-information">
+        <div className="restaurant-image">
           <div>
-            <img 
+            <img
               src={this.state.photoUrl}
               alt='restaurant'
               width='100%'
             />
           </div>
         </div>
-        <div class="restaurant-details">
+        <div className="restaurant-details">
           <div>
             <Typography variant="h3" gutterBottom> {this.state.restaurantName} </Typography> <br />
             <Typography variant="h5" gutterBottom> {this.state.locality} </Typography> <br />
@@ -178,21 +186,21 @@ class Details extends React.Component {
           </div>
           <div style={{float:'left', display:"flex", flexDirection:"row", width:"100%", paddingTop:"5%"}}>
             <div style={{width:"100%"}}>
-            <i class="fa fa-star" aria-hidden="true"> {this.state.userRating} </i>
+            <i className="fa fa-star" aria-hidden="true"> {this.state.userRating} </i>
             <Typography variant="caption" gutterBottom> AVERAGE RATING BY <br /> <span style={{fontWeight: 'bold'}}> {this.state.numberUsersRated} </span> USERS </Typography>
             </div>
             <div style={{width:"100%"}}>
-            <i class="fa fa-inr" aria-hidden="true"> {this.state.avgPrice} </i>
+            <i className="fa fa-inr" aria-hidden="true"> {this.state.avgPrice} </i>
             <Typography variant="caption" gutterBottom> AVERAGE COST FOR <br /> TWO PEOPLE </Typography>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="menu-cart-section">
-        
+      <div className="menu-cart-section">
+
         {/* menu-items section */}
-        <div class='menu'>
+        <div className='menu'>
           <div style={{padding:'3%'}}>
             {this.state.categories.map(categoryItem =>
               <div key={categoryItem.id}>
@@ -203,7 +211,7 @@ class Details extends React.Component {
         </div>
 
         {/* my-cart section */}
-        <div class='cart'>
+        <div className="cart">
           <div style={{padding:'3%'}}>
             <Card className={styles.card}>
               <CardContent>
@@ -221,7 +229,7 @@ class Details extends React.Component {
 
                 <div style={{display:"inline-block", width:"100%", paddingTop:"3%"}}>
                   <div style={{float:"left"}}><Typography variant="body1" gutterBottom style={{fontWeight:'bold'}}> TOTAL AMOUNT </Typography></div>
-                  <div style={{float:"right", width: "14%"}}><i class="fa fa-inr" aria-hidden="true"> {this.state.cartTotalPrice.toFixed(2)} </i></div>
+                  <div style={{float:"right", width: "14%"}}><i className="fa fa-inr" aria-hidden="true"> {this.state.cartTotalPrice.toFixed(2)} </i></div>
                 </div>
               </CardContent>
               <CardActions>
@@ -271,13 +279,13 @@ function CartItem(props) {
       <div style={{width:"10%", display:"flex", alignItems:"center"}}><i style={{color:color}} class="fa fa-stop-circle-o" aria-hidden="true"></i></div>
       <div style={{width:"40%", display:"flex", alignItems:"center", textTransform:"capitalize"}}><span style={{color:"grey"}}> {cartItem.item.itemName} </span></div>
       <div style={{width:"5%", display:"flex", alignItems:"center"}}>
-        <i onClick={(e) => props.this.removeItemFromCartHandler(cartItem)} class="cartButton fa fa-minus" aria-hidden="true" on></i>
+        <i onClick={(e) => props.this.removeItemFromCartHandler(cartItem)} className="cartButton fa fa-minus" aria-hidden="true" on></i>
       </div>
       <div style={{width:"5%", display:"flex", alignItems:"center"}}> {cartItem.quantity} </div>
       <div style={{width:"25%", display:"flex", alignItems:"center"}}>
-        <i onClick={(e) => props.this.addItemFromCartHandler(cartItem)} class="cartButton fa fa-plus" aria-hidden="true" on></i>
+        <i onClick={(e) => props.this.addItemFromCartHandler(cartItem)} className="cartButton fa fa-plus" aria-hidden="true" on></i>
       </div>
-      <div style={{display:"flex", alignItems:"center"}}><i class="fa fa-inr" aria-hidden="true"><span style={{color:"grey"}}> {cartItem.item.price.toFixed(2)} </span></i></div>
+      <div style={{display:"flex", alignItems:"center"}}><i className="fa fa-inr" aria-hidden="true"><span style={{color:"grey"}}> {cartItem.item.price.toFixed(2)} </span></i></div>
     </div>
   )
 }
@@ -300,9 +308,9 @@ function MenuItem(props) {
   const color = props.item.type === "Non-Veg" ? "red" : "green";
   return (
     <div style={{display:"flex", flexDirection:"row", width:"100%", padding:"2%"}}>
-      <div style={{width:"5%", display:"flex", alignItems:"center"}}><i style={{color:color}} class="fa fa-circle" aria-hidden="true"></i></div>
+      <div style={{width:"5%", display:"flex", alignItems:"center"}}><i style={{color:color}} className="fa fa-circle" aria-hidden="true"></i></div>
       <div style={{width:"65%", display:"flex", alignItems:"center", textTransform:"capitalize"}}> {props.item.itemName} </div>
-      <div style={{width:"20%", display:"flex", alignItems:"center"}}><i class="fa fa-inr" aria-hidden="true"> {props.item.price.toFixed(2)} </i></div>
+      <div style={{width:"20%", display:"flex", alignItems:"center"}}><i className="fa fa-inr" aria-hidden="true"> {props.item.price.toFixed(2)} </i></div>
       <div style={{width:"10%", display:"flex", alignItems:"center"}}>
         <IconButton onClick={(e) => props.this.addItemHandler(props.item)}><Add style={{height:"100%"}} /></IconButton>
       </div>

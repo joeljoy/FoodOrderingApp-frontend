@@ -47,6 +47,13 @@ class Home extends React.Component {
     }
   }
 
+  itemClickHandler= (id)=>{
+    console.log('id',id);
+    // sessionStorage.setItem('currentRest',id);
+    this.props.setRestaurantId(id);
+    this.props.history.push('/details');
+  }
+
   render(){
     return(
       <div style={{marginTop:100}}>
@@ -58,6 +65,7 @@ class Home extends React.Component {
             {this.state.filteredRestaurantList.map(item =>(
               <GridListTile key={item.id}>
                 <HomeItem
+                  onItemClick={this.itemClickHandler}
                   item={item}
                 />
               </GridListTile>
@@ -118,7 +126,7 @@ function HomeItem(props){
   return(
     <div className="home-item-main-container">
       <Card style={{width:280}}>
-        <CardActionArea>
+        <CardActionArea onClick={(e)=>props.onItemClick(item.id)}>
           <CardMedia
             component="img"
             alt={item.restaurantName}
