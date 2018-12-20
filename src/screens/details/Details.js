@@ -162,11 +162,13 @@ class Details extends React.Component {
       {/* restaurant information section */}
       <div class="restaurant-information">
         <div class="restaurant-image">
-          <img 
-            src={this.state.photoUrl}
-            alt='restaurant'
-            width='100%'
-          />
+          <div>
+            <img 
+              src={this.state.photoUrl}
+              alt='restaurant'
+              width='100%'
+            />
+          </div>
         </div>
         <div class="restaurant-details">
           <div>

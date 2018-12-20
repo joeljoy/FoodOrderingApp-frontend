@@ -16,6 +16,9 @@
 }
 
 .restaurant-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     padding: 2%;
     width: 30%;
 }
@@ -32,6 +35,10 @@
 
 .cart {
     width: 50%;
+}
+
+.image-helper {
+
 }
 
 @media only screen and (max-width: 768px){
