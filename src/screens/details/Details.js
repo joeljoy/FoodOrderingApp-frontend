@@ -160,15 +160,15 @@ class Details extends React.Component {
       </div>
 
       {/* restaurant information section */}
-      <div style={{background: 'rgb(211,211,211)', display:"flex", flexDirection:"row", width:"100%"}}>
-        <div style={{padding: '2%', width:"30%"}}>
+      <div class="restaurant-information">
+        <div class="restaurant-image">
           <img 
             src={this.state.photoUrl}
             alt='restaurant'
             width='100%'
           />
         </div>
-        <div style={{padding: '2%', width: '70%'}}>
+        <div class="restaurant-details">
           <div>
             <Typography variant="h3" gutterBottom> {this.state.restaurantName} </Typography> <br />
             <Typography variant="h5" gutterBottom> {this.state.locality} </Typography> <br />
@@ -187,10 +187,10 @@ class Details extends React.Component {
         </div>
       </div>
 
-      <div style={{display:'flex', flexDirection:"row", flexWrap:"wrap", width:'100%'}}>
+      <div class="menu-cart-section">
         
         {/* menu-items section */}
-        <div style={{width:"50%"}}>
+        <div class='menu'>
           <div style={{padding:'3%'}}>
             {this.state.categories.map(categoryItem =>
               <div key={categoryItem.id}>
@@ -201,7 +201,7 @@ class Details extends React.Component {
         </div>
 
         {/* my-cart section */}
-        <div style={{width:"50%"}}>
+        <div class='cart'>
           <div style={{padding:'3%'}}>
             <Card className={styles.card}>
               <CardContent>
