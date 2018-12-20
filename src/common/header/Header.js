@@ -144,7 +144,8 @@ class Header extends Component{
       userNameErrorMsg:"",
       name:"",
       typing:false,
-      typingTimeout:0
+      typingTimeout:0,
+      showSearch: props.showSearch,
     };
   }
 
@@ -436,19 +437,21 @@ class Header extends Component{
           <AppBar className={classes.appHeader}>
             <Toolbar className={classes.toolbar}>
               <FastFoodIcon/>
-              <div className={classes.search}>
-                <Input
-                  id="input-with-icon-adornment"
-                  classes={{input: classes.inputInput, underline:classes.customUnderline}}
-                  placeholder="Search by Restaurant Name"
-                  onChange={this.onSearchEntered}
-                  startAdornment={
-                    <InputAdornment position="start">
-                      <SearchIcon style={{color:"white"}}/>
-                    </InputAdornment>
-                  }
-                />
-              </div>
+              {this.state.showSearch &&
+                <div className={classes.search}>
+                  <Input
+                    id="input-with-icon-adornment"
+                    classes={{input: classes.inputInput, underline:classes.customUnderline}}
+                    placeholder="Search by Restaurant Name"
+                    onChange={this.onSearchEntered}
+                    startAdornment={
+                      <InputAdornment position="start">
+                        <SearchIcon style={{color:"white"}}/>
+                      </InputAdornment>
+                    }
+                  />
+                </div>
+              }
               {!isUserLoggedIn &&
                 <Button variant="contained" className={classes.button} color="default" onClick={this.showModal}>
                   <AccountCircle className={classes.icon}/>

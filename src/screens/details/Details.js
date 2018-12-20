@@ -156,7 +156,7 @@ class Details extends React.Component {
       
       {/* Header */}
       <div style={{marginTop: '64px'}}>
-        <Header />
+        <Header showSearch={false} />
       </div>
 
       {/* restaurant information section */}
