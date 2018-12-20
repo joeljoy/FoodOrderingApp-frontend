@@ -29,6 +29,7 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Divider from '@material-ui/core/Divider';
+import Snackbar from '@material-ui/core/Snackbar';
 
 const TabContainer = function(props) {
   return (<Typography component="div" style={{
@@ -88,7 +89,9 @@ class Checkout extends React.Component {
       stateRequired:"dispNone",
       paymentMode:'',
       paymentModeList:[],
-      cartTotalPrice:props.total
+      cartTotalPrice:props.total,
+      snackMsg:'',
+      isSnackVisible:false
     }
     console.log('cart items',sessionStorage.getItem("cartTotalPrice"));
     this.cartItemsList = props.items;
@@ -343,9 +346,37 @@ class Checkout extends React.Component {
             </CardActions>
           </Card>
         </div>
-
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+          open={this.state.isSnackVisible}
+          onClose={this.hideSnackBar}
+          autoHideDuration={5000}
+          message={<span>Order<Snackbar
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left',
+            }}
+            open={this.state.isSnackVisible}
+            onClose={this.hideSnackBar}
+            autoHideDuration={5000}
+            message={<span>{this.state.snackMsg}</span>}/></span>}/>
       </div>
     )
+  }
+
+  showSncakBar = () => {
+    this.setState({
+      isSnackVisible:true,
+    });
+  }
+
+  hideSnackBar = () =>{
+    this.setState({
+      isSnackVisible:false
+    });
   }
 
   componentDidMount(){
@@ -443,15 +474,20 @@ class Checkout extends React.Component {
       body:JSON.stringify(body)
     }).then((response) =>{
       if (response.ok) {
-        return that.orderPlaced();
+        that.orderPlaced();
+        return response.text();
       }
+    }).then((tex)=>{
+      that.setState({
+        snackMsg:"Order placed successfully! Your order id"+tex,
+      })
     }).catch((error) => {
       console.log('error login data',error);
     });
   }
 
   orderPlaced = () => {
-    console.log('order placed');
+    this.showSncakBar();
   }
 }
 
