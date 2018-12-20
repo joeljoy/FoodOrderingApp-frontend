@@ -1,0 +1,19 @@
+.address-container-normal{
+  padding: 10px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  width:75% !important;
+}
+.address-container-selected{
+  padding: 10px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  border-radius: 6px !important;
+  border-top: 2px solid deeppink !important;
+  border-left:2px solid deeppink !important;
+  border-bottom: 4px solid deeppink !important;
+  border-right:4px solid deeppink !important;
+  width:75% !important;
+}

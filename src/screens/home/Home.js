@@ -51,6 +51,7 @@ class Home extends React.Component {
     return(
       <div style={{marginTop:100}}>
         <Header
+          screen="Home"
           searchHandler={this.searchHandler}/>
         <div>
           <GridList cellHeight={'auto'} cols={this.getGridListCols()}>

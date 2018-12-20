@@ -429,26 +429,28 @@ class Header extends Component{
   }
 
   render(){
-    const {classes} = this.props;
+    const {classes,screen} = this.props;
     let isUserLoggedIn = sessionStorage.getItem("loggedIn");
     return (
         <div>
           <AppBar className={classes.appHeader}>
             <Toolbar className={classes.toolbar}>
               <FastFoodIcon/>
-              <div className={classes.search}>
-                <Input
-                  id="input-with-icon-adornment"
-                  classes={{input: classes.inputInput, underline:classes.customUnderline}}
-                  placeholder="Search by Restaurant Name"
-                  onChange={this.onSearchEntered}
-                  startAdornment={
-                    <InputAdornment position="start">
-                      <SearchIcon style={{color:"white"}}/>
-                    </InputAdornment>
-                  }
-                />
-              </div>
+              {screen === "Home" &&
+                <div className={classes.search}>
+                  <Input
+                    id="input-with-icon-adornment"
+                    classes={{input: classes.inputInput, underline:classes.customUnderline}}
+                    placeholder="Search by Restaurant Name"
+                    onChange={this.onSearchEntered}
+                    startAdornment={
+                      <InputAdornment position="start">
+                        <SearchIcon style={{color:"white"}}/>
+                      </InputAdornment>
+                    }
+                  />
+                </div>
+              }
               {!isUserLoggedIn &&
                 <Button variant="contained" className={classes.button} color="default" onClick={this.showModal}>
                   <AccountCircle className={classes.icon}/>
@@ -511,7 +513,7 @@ class Header extends Component{
                 }
                 {
                   this.state.value === 1 &&
-                  <TabContainer className={classes.tabContainer}>
+                  <TabContainer>
                     <div className={classes.tabContainer}>
                       <FormControl>
                         <InputLabel htmlFor="firstname">First Name*</InputLabel>
