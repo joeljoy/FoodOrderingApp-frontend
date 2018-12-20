@@ -160,41 +160,37 @@ class Details extends React.Component {
       </div>
 
       {/* restaurant information section */}
-      <div style={{background: 'rgb(211,211,211)', height: '400px'}}>
-        <div style={{float:'left'}}>
-          <div style={{padding: '30px'}}>
-            <img 
-              src={this.state.photoUrl}
-              alt='restaurant'
-              width='500px'
-            />
-          </div>
+      <div style={{background: 'rgb(211,211,211)', display:"flex", flexDirection:"row", width:"100%"}}>
+        <div style={{padding: '2%', width:"30%"}}>
+          <img 
+            src={this.state.photoUrl}
+            alt='restaurant'
+            width='100%'
+          />
         </div>
-        <div style={{float:'left'}}>
-          <div style={{padding: '50px'}}>
+        <div style={{padding: '2%', width: '70%'}}>
+          <div>
             <Typography variant="h3" gutterBottom> {this.state.restaurantName} </Typography> <br />
             <Typography variant="h5" gutterBottom> {this.state.locality} </Typography> <br />
             <Typography variant="body1" gutterBottom> {this.state.categories.map((el) => el.categoryName).join(", ")} </Typography>
-            <div style={{float:'left'}}> 
-              <div style={{padding:'70px'}}>
-              <i class="fa fa-star" aria-hidden="true"> {this.state.userRating} </i>
-              <Typography variant="caption" gutterBottom> AVERAGE RATING BY <br /> <span style={{fontWeight: 'bold'}}> {this.state.numberUsersRated} </span> USERS </Typography>
-              </div>
+          </div>
+          <div style={{float:'left', display:"flex", flexDirection:"row", width:"100%", paddingTop:"5%"}}>
+            <div style={{width:"100%"}}>
+            <i class="fa fa-star" aria-hidden="true"> {this.state.userRating} </i>
+            <Typography variant="caption" gutterBottom> AVERAGE RATING BY <br /> <span style={{fontWeight: 'bold'}}> {this.state.numberUsersRated} </span> USERS </Typography>
             </div>
-            <div style={{float:'left'}}> 
-              <div style={{padding:'70px'}}>
-              <i class="fa fa-inr" aria-hidden="true"> {this.state.avgPrice} </i>
-              <Typography variant="caption" gutterBottom> AVERAGE COST FOR <br /> TWO PEOPLE </Typography>
-              </div>
+            <div style={{width:"100%"}}>
+            <i class="fa fa-inr" aria-hidden="true"> {this.state.avgPrice} </i>
+            <Typography variant="caption" gutterBottom> AVERAGE COST FOR <br /> TWO PEOPLE </Typography>
             </div>
           </div>
         </div>
       </div>
 
-      <div style={{display:'inline-block', width:'100%'}}>
+      <div style={{display:'flex', flexDirection:"row", flexWrap:"wrap", width:'100%'}}>
         
         {/* menu-items section */}
-        <div style={{float:'left', width:'50%'}}>
+        <div style={{width:"50%"}}>
           <div style={{padding:'3%'}}>
             {this.state.categories.map(categoryItem =>
               <div key={categoryItem.id}>
@@ -205,7 +201,7 @@ class Details extends React.Component {
         </div>
 
         {/* my-cart section */}
-        <div style={{float:'right', width:'50%'}}>
+        <div style={{width:"50%"}}>
           <div style={{padding:'3%'}}>
             <Card className={styles.card}>
               <CardContent>
