@@ -51,7 +51,8 @@ class Home extends React.Component {
     return(
       <div style={{marginTop:100}}>
         <Header
-          searchHandler={this.searchHandler}/>
+          searchHandler={this.searchHandler}
+          showSearch={true} />
         <div>
           <GridList cellHeight={'auto'} cols={this.getGridListCols()}>
             {this.state.filteredRestaurantList.map(item =>(
