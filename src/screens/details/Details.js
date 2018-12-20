@@ -46,10 +46,11 @@ class Details extends React.Component {
       categories: [],
       itemAddedBarOpen: false,
       cartItems: 0,
+      cartItemsList: [],
     }
   };
 
-  componentDidMount() {
+  componentWillMount() {
     this.getRestaurantDetails(6);
   };
 
@@ -86,9 +87,13 @@ class Details extends React.Component {
 
   addItemOnClickHandler = (item) => {
     this.handleItemAddedBar();
+    let cartItemsList = this.state.cartItemsList;
+    cartItemsList.push(item);
     this.setState({
       cartItems: this.state.cartItems + 1,
+      cartItemsList: cartItemsList,
     })
+    console.log(cartItemsList);
   }
 
   render(){
@@ -156,19 +161,15 @@ class Details extends React.Component {
                 </div>
 
                 {/* items in cart */}
-                <div style={{display:"flex", flexDirection:"row", width:"100%", padding:"3%"}}>
-                  <div style={{width:"10%", display:"flex", alignItems:"center"}}><i class="fa fa-stop-circle-o" aria-hidden="true"></i></div>
-                  <div style={{width:"40%", display:"flex", alignItems:"center"}}><span style={{color:"grey"}}>Coke</span></div>
-                  <div style={{width:"5%", display:"flex", alignItems:"center"}}><i class="fa fa-minus" aria-hidden="true" on></i></div>
-                  <div style={{width:"5%", display:"flex", alignItems:"center"}}>1</div>
-                  <div style={{width:"30%", display:"flex", alignItems:"center"}}><i class="fa fa-plus" aria-hidden="true" on></i></div>
-                  <div style={{display:"flex", alignItems:"center"}}><i class="fa fa-inr" aria-hidden="true"><span style={{color:"grey"}}>30.00</span></i></div>
-                </div>
+                {this.state.cartItemsList.map(cartItem =>
+                  <div key={cartItem.id}>
+                    <CartItem item={cartItem} this={this} />
+                  </div>
+                )}
 
-
-                <div style={{display:"inline-block", width:"100%"}}>
+                <div style={{display:"inline-block", width:"100%", paddingTop:"3%"}}>
                   <div style={{float:"left"}}><Typography variant="body1" gutterBottom style={{fontWeight:'bold'}}> TOTAL AMOUNT </Typography></div>
-                  <div style={{float:"right"}}><i class="fa fa-inr" aria-hidden="true"> 975 </i></div>
+                  <div style={{float:"right", width: "14%"}}><i class="fa fa-inr" aria-hidden="true"> 975.00 </i></div>
                 </div>
               </CardContent>
               <CardActions>
@@ -210,6 +211,20 @@ class Details extends React.Component {
   }
 }
 
+function CartItem(props) {
+  const color = props.item.type === "Non-Veg" ? "red" : "green";
+  return (
+    <div style={{display:"flex", flexDirection:"row", width:"100%", padding:"1%"}}>
+      <div style={{width:"10%", display:"flex", alignItems:"center"}}><i style={{color:color}} class="fa fa-stop-circle-o" aria-hidden="true"></i></div>
+      <div style={{width:"40%", display:"flex", alignItems:"center", textTransform:"capitalize"}}><span style={{color:"grey"}}> {props.item.itemName} </span></div>
+      <div style={{width:"5%", display:"flex", alignItems:"center"}}><i class="fa fa-minus" aria-hidden="true" on></i></div>
+      <div style={{width:"5%", display:"flex", alignItems:"center"}}>1</div>
+      <div style={{width:"25%", display:"flex", alignItems:"center"}}><i class="fa fa-plus" aria-hidden="true" on></i></div>
+      <div style={{display:"flex", alignItems:"center"}}><i class="fa fa-inr" aria-hidden="true"><span style={{color:"grey"}}> {props.item.price.toFixed(2)} </span></i></div>
+    </div>
+  )
+}
+
 function CategoryItem(props) {
   return (
     <div style={{padding:"1%"}}>
@@ -225,14 +240,14 @@ function CategoryItem(props) {
 };
 
 function MenuItem(props) {
-  const color = props.item.type === "Non-Veg" ? "red" : "green"
+  const color = props.item.type === "Non-Veg" ? "red" : "green";
   return (
     <div style={{display:"flex", flexDirection:"row", width:"100%", padding:"2%"}}>
       <div style={{width:"5%", display:"flex", alignItems:"center"}}><i style={{color:color}} class="fa fa-circle" aria-hidden="true"></i></div>
       <div style={{width:"65%", display:"flex", alignItems:"center", textTransform:"capitalize"}}> {props.item.itemName} </div>
       <div style={{width:"20%", display:"flex", alignItems:"center"}}><i class="fa fa-inr" aria-hidden="true"> {props.item.price.toFixed(2)} </i></div>
       <div style={{width:"10%", display:"flex", alignItems:"center"}}>
-        <IconButton onClick={props.this.addItemOnClickHandler}><Add style={{height:"100%"}} /></IconButton>
+        <IconButton onClick={(e) => props.this.addItemOnClickHandler(props.item)}><Add style={{height:"100%"}} /></IconButton>
       </div>
     </div>
   )
