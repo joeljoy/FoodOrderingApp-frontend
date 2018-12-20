@@ -85,10 +85,22 @@ class Details extends React.Component {
     })
   }
 
-  addItemOnClickHandler = (item) => {
+  addItemHandler = (item) => {
     this.handleItemAddedBar();
     let cartItemsList = this.state.cartItemsList;
-    cartItemsList.push(item);
+    
+    let cartItems = cartItemsList.map((el) => el.item);
+    let index = cartItems.indexOf(item);
+    if (index === -1) {
+      let cartItem = {
+        item: item,
+        quantity: 1,
+      }
+      cartItemsList.push(cartItem);
+    } else {
+      cartItemsList[index].quantity += 1;
+    }
+
     this.setState({
       cartItems: this.state.cartItems + 1,
       cartItemsList: cartItemsList,
@@ -212,15 +224,16 @@ class Details extends React.Component {
 }
 
 function CartItem(props) {
-  const color = props.item.type === "Non-Veg" ? "red" : "green";
+  const cartItem = props.item;
+  const color = cartItem.item.type === "Non-Veg" ? "red" : "green";
   return (
     <div style={{display:"flex", flexDirection:"row", width:"100%", padding:"1%"}}>
       <div style={{width:"10%", display:"flex", alignItems:"center"}}><i style={{color:color}} class="fa fa-stop-circle-o" aria-hidden="true"></i></div>
-      <div style={{width:"40%", display:"flex", alignItems:"center", textTransform:"capitalize"}}><span style={{color:"grey"}}> {props.item.itemName} </span></div>
+      <div style={{width:"40%", display:"flex", alignItems:"center", textTransform:"capitalize"}}><span style={{color:"grey"}}> {cartItem.item.itemName} </span></div>
       <div style={{width:"5%", display:"flex", alignItems:"center"}}><i class="fa fa-minus" aria-hidden="true" on></i></div>
-      <div style={{width:"5%", display:"flex", alignItems:"center"}}>1</div>
+      <div style={{width:"5%", display:"flex", alignItems:"center"}}> {cartItem.quantity} </div>
       <div style={{width:"25%", display:"flex", alignItems:"center"}}><i class="fa fa-plus" aria-hidden="true" on></i></div>
-      <div style={{display:"flex", alignItems:"center"}}><i class="fa fa-inr" aria-hidden="true"><span style={{color:"grey"}}> {props.item.price.toFixed(2)} </span></i></div>
+      <div style={{display:"flex", alignItems:"center"}}><i class="fa fa-inr" aria-hidden="true"><span style={{color:"grey"}}> {cartItem.item.price.toFixed(2)} </span></i></div>
     </div>
   )
 }
@@ -247,7 +260,7 @@ function MenuItem(props) {
       <div style={{width:"65%", display:"flex", alignItems:"center", textTransform:"capitalize"}}> {props.item.itemName} </div>
       <div style={{width:"20%", display:"flex", alignItems:"center"}}><i class="fa fa-inr" aria-hidden="true"> {props.item.price.toFixed(2)} </i></div>
       <div style={{width:"10%", display:"flex", alignItems:"center"}}>
-        <IconButton onClick={(e) => props.this.addItemOnClickHandler(props.item)}><Add style={{height:"100%"}} /></IconButton>
+        <IconButton onClick={(e) => props.this.addItemHandler(props.item)}><Add style={{height:"100%"}} /></IconButton>
       </div>
     </div>
   )
